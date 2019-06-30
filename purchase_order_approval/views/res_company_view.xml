@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_add_po_levels" model="ir.ui.view">
+        <field name="name">res.company.from.inherit</field>
+        <field name="model">res.company</field>
+        <field name="priority">24</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[1]" position="after">
+                <page string="PO Approval Setting">
+                    <group>
+                        <field name="steps_id"/>
+                        <field name="po_first_person_ammount" attrs="{'invisible': [('steps_id', '=', False)]}" />
+                        <field name="po_second_person_ammount" attrs="{'invisible': [('steps_id', '=', False)]}"/>
+                        <field name="po_third_person_ammount" attrs="{'invisible': [('steps_id', '=', False)]}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

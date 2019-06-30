@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record model="ir.ui.view" id="purchase_order_form_inherit">
+        <field name="name">purchase.order.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="/form/header/button[@name='button_approve']" position="replace">
+                <button name="button_approve" type="object" states='to approve' string="Approve Order" class="btn btn-danger" groups="purchase.group_purchase_manager"/>
+                <button name="button_finance_approve" states='to approve finance' string="Finance Approval" type="object" class="oe_highlight" groups="account.group_account_manager"/> 
+                <button name="button_director_approve" states='to approve director' string="Director Approval" type="object" class="oe_highlight" groups="purchase_order_approval.group_po_director"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_po_approval_search" model="ir.ui.view">
+      <field name="name">purchase.order.approval.search.filter</field>
+      <field name="model">purchase.order</field>
+      <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
+      <field name="arch" type="xml">
+        <xpath expr="//search" position="inside">
+          <filter string="Finance Approval" name="po_finance_approval" domain="[('state', '=', 'to approve finance')]"/>
+          <filter string="Director Approval" name="po_director_approval" domain="[('state', '=', 'to approve director')]"/>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="action_po_manager" model="ir.actions.act_window">
+        <field name="name">Purchase Order / Manager Approved</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_to_approve': 1}</field>
+        <field name="groups_id" eval="[(4, ref('purchase.group_purchase_manager'))]"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                This vendor has no purchase order. Click to create a new RfQ.
+            </p><p>
+                The request for quotation is the first step of the purchases flow. Once
+                converted into a purchase order, you will be able to control the receipt
+                of the products and the vendor bill.
+            </p>
+        </field>
+    </record>    
+
+    <record id="action_po_finance" model="ir.actions.act_window">
+        <field name="name">Purchase Order / Finance Manager Approved</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_po_finance_approval': 1}</field>
+        <!-- <field name="groups_id" eval="[(4, ref('purchase.group_purchase_manager'))]"/> -->
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                This vendor has no purchase order. Click to create a new RfQ.
+            </p><p>
+                The request for quotation is the first step of the purchases flow. Once
+                converted into a purchase order, you will be able to control the receipt
+                of the products and the vendor bill.
+            </p>
+        </field>
+    </record>    
+
+    <record id="action_po_director" model="ir.actions.act_window">
+        <field name="name">Purchase Order / Director Approved</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_po_director_approval': 1}</field>
+        <!-- <field name="groups_id" eval="[(4, ref('purchase.group_purchase_manager'))]"/> -->
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                This vendor has no purchase order. Click to create a new RfQ.
+            </p><p>
+                The request for quotation is the first step of the purchases flow. Once
+                converted into a purchase order, you will be able to control the receipt
+                of the products and the vendor bill.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem name="PO Manager Approval" id="menu_po_manager" action="action_po_manager"
+            parent="purchase.menu_procurement_management" sequence="6" groups="purchase.group_purchase_manager"/>
+
+    <menuitem name="Finance Manager Approval" id="menu_po_finance" action="action_po_finance"
+            parent="purchase.menu_procurement_management" sequence="7" groups="account.group_account_manager"/>
+
+    <menuitem name="Director Approval" id="menu_po_director" action="action_po_director"
+            parent="purchase.menu_procurement_management" sequence="8" groups="purchase_order_approval.group_po_director"/>
+</odoo>
